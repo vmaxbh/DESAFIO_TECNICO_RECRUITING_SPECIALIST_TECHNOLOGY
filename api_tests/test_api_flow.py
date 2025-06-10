@@ -63,3 +63,20 @@ def test_authorize_user():
 
     assert response.status_code == 200
     assert response.text == "true"
+
+def test_list_books():
+    global isbn_list
+    url = "https://demoqa.com/BookStore/v1/Books"
+    headers = {"Authorization": f"Bearer {token}"}
+
+    response = requests.get(url, headers=headers)
+    print(f"[LIST BOOKS] {response.status_code}")
+    print(response.json())
+
+    assert response.status_code == 200
+
+    books = response.json().get("books", [])
+    assert len(books) >= 2, "Menos de 2 livros disponíveis"
+
+    # Armazena dois ISBNs
+    isbn_list = [books[0]["isbn"], books[1]["isbn"]]
