@@ -52,3 +52,14 @@ def test_generate_token():
     token = json_data.get("token")
     print(f"[GENERATE TOKEN] Token gerado: {token}")
     assert token is not None, "Token não encontrado na resposta"
+
+def test_authorize_user():
+    url = "https://demoqa.com/Account/v1/Authorized"
+    payload = {"userName": username, "password": password}
+    headers = {"Content-Type": "application/json"}
+
+    response = requests.post(url, json=payload, headers=headers)
+    print(f"[AUTHORIZE USER] {response.status_code} - {response.text}")
+
+    assert response.status_code == 200
+    assert response.text == "true"
