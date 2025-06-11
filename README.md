@@ -57,7 +57,7 @@
 
 ### 1. Clone o Repositório
 ```bash
-git clone https://github.com/seu-usuario/desafio-qa.git
+git clone  https://github.com/vmaxbh/DESAFIO_TECNICO_RECRUITING_SPECIALIST_TECHNOLOGY.
 cd desafio-qa
 ```
 
