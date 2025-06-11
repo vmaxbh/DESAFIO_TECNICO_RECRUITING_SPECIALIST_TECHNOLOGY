@@ -33,7 +33,7 @@ jobs:
         Write-Host "Instalando Selenium..."
         python -m pip install selenium==4.18.1
         Write-Host "Instalando Pytest e plugins..."
-        python -m pip install pytest pytest-html pytest-metadata
+        python -m pip install pytest pytest-html pytest-metadata pytest-rerunfailures
         Write-Host "Instalando Requests..."
         python -m pip install requests
         Write-Host "Instalando Faker..."
@@ -59,8 +59,8 @@ jobs:
             --capture=sys
             --show-capture=log
             --tb=short
-            --retries 3
-            --retry-delay 1
+        reruns = 3
+        reruns_delay = 1
         metadata =
             Runner: GitHub Actions
             Python: 3.9
