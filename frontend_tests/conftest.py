@@ -2,9 +2,11 @@ import pytest
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from webdriver_manager.chrome import ChromeDriverManager
+from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.common.keys import Keys
 import os
 import time
 
@@ -81,6 +83,99 @@ class BasePage:
         # Captura a tela
         self.driver.save_screenshot(screenshot_path)
         print(f"Screenshot salva em: {screenshot_path}")
+
+    def action_keys(self, by_locator, key=Keys.TAB, repeat=1):
+        element = self.driver.find_element(*by_locator)
+        for _ in range(repeat):
+            element.send_keys(key)
+
+    def fill_subjects_field(self, subjects):
+        try:
+            # Localiza o campo de input dentro do subjectsContainer
+            input_field = self.find_element((By.CSS_SELECTOR, "#subjectsInput"))
+
+            # Para cada subject na lista
+            for subject in subjects.split(","):
+                input_field.send_keys(subject.strip())
+                time.sleep(0.5)  # Espera o autocomplete aparecer
+                input_field.send_keys(Keys.ENTER)
+                time.sleep(0.3)
+
+        except Exception as e:
+            raise Exception(f"Falha ao preencher campo de Subjects: {str(e)}")
+
+    def select_state(self, state_name="NCR"):
+        """
+        Seleciona um estado no dropdown de forma confiável
+        """
+        try:
+            # Localiza o container principal do dropdown
+            state_container = self.find_element((By.ID, "state"))
+
+            # Rola até o elemento para garantir visibilidade
+            self.driver.execute_script("arguments[0].scrollIntoView(true);", state_container)
+            time.sleep(0.5)  # Pequeno delay para o scroll completar
+
+            # Localiza o elemento clicável do dropdown (usando CSS selector mais estável)
+            dropdown_arrow = state_container.find_element(By.CSS_SELECTOR, "div.css-1wy0on6")
+
+            # Clica usando ActionChains para maior confiabilidade
+            ActionChains(self.driver).move_to_element(dropdown_arrow).click().perform()
+            time.sleep(0.5)  # Espera o dropdown abrir
+
+            # Localiza todas as opções do dropdown
+            options = self.driver.find_elements(By.CSS_SELECTOR, "div.css-1n7v3ny-option")
+
+            # Procura a opção desejada
+            for option in options:
+                if option.text.strip() == state_name:
+                    # Clica na opção encontrada
+                    ActionChains(self.driver).move_to_element(option).click().perform()
+                    return
+
+            # Se não encontrou, tenta método alternativo via input
+            input_field = state_container.find_element(By.CSS_SELECTOR, "input")
+            input_field.send_keys(state_name)
+            time.sleep(0.5)
+            input_field.send_keys(Keys.ENTER)
+
+        except Exception as e:
+            raise Exception(f"Falha ao selecionar o estado '{state_name}': {str(e)}")
+
+    def select_city(self, city_name="Delhi"):
+        """
+        Seleciona uma cidade no dropdown de forma confiável
+        """
+        try:
+            # Localiza o container principal do dropdown
+            city_container = self.find_element((By.ID, "city"))
+
+            # Rola até o elemento
+            self.driver.execute_script("arguments[0].scrollIntoView(true);", city_container)
+            time.sleep(0.5)
+
+            # Localiza o elemento clicável do dropdown
+            dropdown_arrow = city_container.find_element(By.CSS_SELECTOR, "div.css-1wy0on6")
+            ActionChains(self.driver).move_to_element(dropdown_arrow).click().perform()
+            time.sleep(0.5)
+
+            # Localiza todas as opções do dropdown
+            options = self.driver.find_elements(By.CSS_SELECTOR, "div.css-1n7v3ny-option")
+
+            # Procura a opção desejada
+            for option in options:
+                if option.text.strip() == city_name:
+                    ActionChains(self.driver).move_to_element(option).click().perform()
+                    return
+
+            # Método alternativo se não encontrar
+            input_field = city_container.find_element(By.CSS_SELECTOR, "input")
+            input_field.send_keys(city_name)
+            time.sleep(0.5)
+            input_field.send_keys(Keys.ENTER)
+
+        except Exception as e:
+            raise Exception(f"Falha ao selecionar a cidade '{city_name}': {str(e)}")
 
 @pytest.fixture(scope="function")
 def setup_browser():

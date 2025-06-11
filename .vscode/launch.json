@@ -1,0 +1,16 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Debug: Pytest - test_forms.py",
+            "type": "python",
+            "request": "launch",
+            "module": "pytest",
+            "args": [
+                "frontend_tests/test_forms.py"
+            ],
+            "console": "integratedTerminal",
+            "justMyCode": false
+        }
+    ]
+}
