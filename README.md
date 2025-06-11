@@ -3,6 +3,7 @@
 [![Python](https://img.shields.io/badge/Python-3.x-blue.svg)](https://www.python.org/)
 [![Pytest](https://img.shields.io/badge/Pytest-Latest-green.svg)](https://docs.pytest.org/)
 [![Selenium](https://img.shields.io/badge/Selenium-Latest-orange.svg)](https://www.selenium.dev/)
+[![GitHub Actions](https://img.shields.io/badge/GitHub%20Actions-Enabled-blue.svg)](https://github.com/features/actions)
 
 > Projeto de automação de testes para API REST e Frontend utilizando o site de demonstração [DemoQA](https://demoqa.com)
 
@@ -12,6 +13,7 @@
 - [Estrutura do Projeto](#-estrutura-do-projeto)
 - [Como Executar](#-como-executar)
 - [Execução dos Testes](#-execução-dos-testes)
+- [CI/CD com GitHub Actions](#cicd-com-github-actions)
 - [Arquitetura dos Testes](#-arquitetura-dos-testes)
 - [Boas Práticas](#-boas-práticas)
 - [Considerações Finais](#-considerações-finais)
@@ -57,7 +59,7 @@
 
 ### 1. Clone o Repositório
 ```bash
-git clone  https://github.com/vmaxbh/DESAFIO_TECNICO_RECRUITING_SPECIALIST_TECHNOLOGY.
+git clone https://github.com/seu-usuario/desafio-qa.git
 cd desafio-qa
 ```
 
@@ -92,7 +94,66 @@ pytest frontend_tests/
 
 ### Gerar Relatório HTML (opcional)
 ```bash
-pytest --html=report.html
+pytest --html=relatorio_teste.html
+```
+
+## 🔄 CI/CD com GitHub Actions
+
+O projeto está configurado com GitHub Actions para execução automática dos testes. O pipeline é executado em cada push e pull request.
+
+### Estrutura do Pipeline
+
+O pipeline está configurado no arquivo `.github/workflows/cicd.yml` e inclui:
+
+1. **Configuração do Ambiente**
+   - Instalação do Python 3.9
+   - Instalação do Chrome e WebDriver
+   - Instalação das dependências do projeto
+
+2. **Execução dos Testes**
+   - Testes de API
+   - Testes de Frontend
+   - Geração de relatórios HTML
+
+3. **Configurações Especiais**
+   - Modo headless para o Chrome
+   - Retry automático em caso de falhas
+   - Tratamento de anúncios e popups
+
+### Como Executar no GitHub Actions
+
+1. **Fork do Repositório**
+   - Faça um fork deste repositório para sua conta GitHub
+
+2. **Configuração do GitHub Actions**
+   - O pipeline já está configurado no arquivo `.github/workflows/cicd.yml`
+   - Não é necessária nenhuma configuração adicional
+
+3. **Execução Automática**
+   - Os testes serão executados automaticamente em:
+     - Push para qualquer branch
+     - Criação de Pull Request
+     - Push para Pull Request existente
+
+4. **Visualização dos Resultados**
+   - Acesse a aba "Actions" no seu repositório
+   - Clique na execução desejada
+   - Visualize os logs e relatórios de teste
+   - Baixe os relatórios HTML gerados
+
+### Configurações do Pipeline
+
+O pipeline inclui várias configurações para garantir a estabilidade dos testes:
+
+```yaml
+# Configurações do Chrome
+options.add_argument('--headless')
+options.add_argument('--disable-notifications')
+options.add_argument('--disable-popup-blocking')
+
+# Configurações do Pytest
+reruns = 3
+reruns_delay = 1
 ```
 
 ## 🧱 Arquitetura dos Testes
