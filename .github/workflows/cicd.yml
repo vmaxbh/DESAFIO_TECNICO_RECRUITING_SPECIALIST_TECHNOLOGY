@@ -70,9 +70,11 @@ jobs:
         $config | Out-File -FilePath pytest.ini -Encoding utf8 -Force
         Write-Host "Configuração do Pytest criada"
 
-    - name: Create Chrome options file
+    - name: Create utils directory and Chrome options file
       shell: pwsh
       run: |
+        Write-Host "Criando diretório utils..."
+        New-Item -ItemType Directory -Force -Path utils
         Write-Host "Criando arquivo de configuração do Chrome..."
         $chromeOptions = @'
         from selenium.webdriver.chrome.options import Options
