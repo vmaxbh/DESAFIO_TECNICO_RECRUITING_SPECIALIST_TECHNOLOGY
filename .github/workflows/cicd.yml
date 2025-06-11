@@ -1,0 +1,88 @@
+name: Desafio Técnico de QA - DemoQA Automation
+on: [push, pull_request]
+
+jobs:
+  test:
+    runs-on: windows-latest
+    timeout-minutes: 30
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.9'
+
+    - name: Install Chrome and Driver
+      shell: pwsh
+      run: |
+        $ProgressPreference = 'SilentlyContinue'
+        Invoke-WebRequest "https://dl.google.com/chrome/install/latest/chrome_installer.exe" -OutFile chrome_installer.exe
+        Start-Process -FilePath .\chrome_installer.exe -Args "/silent /install" -Wait
+        Remove-Item chrome_installer.exe
+        python -m pip install webdriver-manager
+
+    - name: Install base dependencies
+      run: |
+        python -m pip install --upgrade pip setuptools wheel
+        python -m pip install selenium==4.18.1
+        python -m pip install pytest pytest-html pytest-metadata
+        python -m pip install requests
+        python -m pip install faker==24.9.0
+
+    - name: Install project dependencies
+      run: |
+        pip install -r requirements.txt
+
+    - name: Create pytest configuration
+      shell: pwsh
+      run: |
+        $config = @'
+        [pytest]
+        addopts =
+            -v
+            --html=relatorio_teste.html
+            --self-contained-html
+            --capture=sys
+            --show-capture=log
+        metadata =
+            Runner: GitHub Actions
+            Python: 3.9
+            Platform: Windows
+            Project: DemoQA Automation
+        '@
+        $config | Out-File -FilePath pytest.ini -Encoding utf8 -Force
+
+    - name: Run API Tests
+      run: |
+        pytest api_tests/ --html=relatorio_api_teste.html
+
+    - name: Run Frontend Tests
+      run: |
+        pytest frontend_tests/ --html=relatorio_frontend_teste.html
+
+    - name: Process and upload reports
+      shell: pwsh
+      run: |
+        $reports = @("relatorio_api_teste.html", "relatorio_frontend_teste.html")
+        foreach ($report in $reports) {
+            if (Test-Path $report) {
+                $content = Get-Content -Path $report -Raw
+                $content = $content -replace '<\s*br\s*/?>', '<br>' -replace '<\s*/\s*div\s*>', '</div>'
+                $processedName = "processed_$report"
+                $content | Out-File -FilePath $processedName -Encoding utf8 -Force
+                Write-Output "Processed $report to $processedName"
+            } else {
+                Write-Warning "File $report not found!"
+            }
+        }
+
+    - name: Upload test reports
+      uses: actions/upload-artifact@v4
+      with:
+        name: relatorios-automacao
+        path: |
+          processed_relatorio_api_teste.html
+          processed_relatorio_frontend_teste.html
+        if-no-files-found: error
