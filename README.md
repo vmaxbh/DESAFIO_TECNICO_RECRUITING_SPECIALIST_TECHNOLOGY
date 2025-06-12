@@ -15,6 +15,7 @@
 - [Execução dos Testes](#-execução-dos-testes)
 - [CI/CD com GitHub Actions](#cicd-com-github-actions)
 - [Arquitetura dos Testes](#-arquitetura-dos-testes)
+- [Especificações BDD](#-especificações-bdd)
 - [Boas Práticas](#-boas-práticas)
 - [Considerações Finais](#-considerações-finais)
 
@@ -46,6 +47,13 @@
 │   ├── test_alerts.py
 │   ├── test_progress_bar.py
 │   └── test_sortable.py
+│
+├── BDD/                      # Especificações BDD
+│   ├── api_flow.feature
+│   ├── forms.feature
+│   ├── alerts_frame_windows.feature
+│   ├── widgets.feature
+│   └── interactions.feature
 │
 ├── utils/                    # Funções auxiliares e dados
 │   └── helpers.py
@@ -172,6 +180,34 @@ reruns_delay = 1
 3. Testes de Barra de Progresso
 4. Ordenação de elementos com Sortable
 
+## 📝 Especificações BDD
+
+O projeto inclui especificações BDD (Behavior Driven Development) para documentar os cenários de teste em formato Gherkin. Os arquivos estão localizados na pasta `BDD/`:
+
+### 🔹 API Flow (`api_flow.feature`)
+- Criação de usuário
+- Geração de token
+- Verificação de autorização
+- Listagem de livros
+- Aluguel de livros
+- Obtenção de detalhes do usuário
+
+### 🔹 Forms (`forms.feature`)
+- Navegação para o formulário
+- Preenchimento do formulário com dados válidos
+
+### 🔹 Alerts, Frame & Windows (`alerts_frame_windows.feature`)
+- Navegação para Browser Windows
+- Interação com nova janela
+
+### 🔹 Widgets (`widgets.feature`)
+- Navegação para Progress Bar
+- Controle da barra de progresso (start, stop, continue, reset)
+
+### 🔹 Interactions (`interactions.feature`)
+- Navegação para Sortable
+- Ordenação de elementos da lista
+
 ## ✅ Boas Práticas Adotadas
 
 - 📁 Organização modular com pastas separadas
@@ -180,10 +216,11 @@ reruns_delay = 1
 - 💡 Comentários explicativos no código
 - ⏱️ Uso de waits explícitos no Selenium
 - 📐 Page Object Model (POM) sugerido para crescimento do projeto
+- 📝 Documentação BDD para melhor compreensão dos cenários
 
 ## 📌 Considerações Finais
 
-Este projeto foi desenvolvido com foco em demonstrar habilidades práticas em automação de testes de software, cobrindo desde testes de API até interações complexas com a interface do usuário.
+Este projeto foi desenvolvido com foco em demonstrar habilidades práticas em automação de testes de software, cobrindo desde testes de API até interações complexas com a interface do usuário. A inclusão de especificações BDD ajuda na documentação e compreensão dos cenários de teste.
 
 ---
 
